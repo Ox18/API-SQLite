@@ -7,7 +7,6 @@ dotenv.config();
 class Connection{
     static getDB(){
         const dir = path.resolve(__dirname, './db/post');
-        console.log(dir);
         const sqlite3 = sqlite.verbose();
         const db = new sqlite3.Database(dir, sqlite3.OPEN_READWRITE,
             (error)=>{
