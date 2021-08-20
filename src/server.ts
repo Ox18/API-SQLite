@@ -1,6 +1,25 @@
 import express, { Express } from 'express';
 import morgan from 'morgan';
 const app: Express = express();
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+// Extended: https://swagger.io/specification/#infoObject
+const swaggerOptions = {
+    swaggerDefinition: {
+      info: {
+        version: "1.0.0",
+        title: "Customer API",
+        description: "Customer API Information",
+        contact: {
+          name: "Amazing Developer"
+        },
+        servers: ["http://localhost:5500"]
+      }
+    },
+    // ['.routes/*.js']
+    apis: ["src/server.ts", "src/routes/*.ts"]
+  };
 
 /** Logging */
 app.use(morgan('dev'));
@@ -23,6 +42,9 @@ app.use((req, res, next) => {
     next();
 });
 
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 /** Routes */
 app.use(require('./routes'));
 
@@ -36,5 +58,5 @@ app.use((req, res, next) => {
 
 /** Server */
 
-const PORT: any = process.env.PORT ?? 6000;
-app.listen(5000, () => console.log(`The server is running on port ${PORT}`));
+const PORT: any = process.env.PORT ?? 5500;
+app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
